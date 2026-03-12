@@ -1,0 +1,33 @@
+# dependencies
+node_modules
+
+# build artifacts
+dist
+
+# git
+.git
+.gitignore
+
+# docker
+.dockerignore
+docker-compose.yml
+docker-compose.*
+
+# env
+.env
+.env.*
+
+# logs
+npm-debug.log
+yarn-error.log
+logs
+
+# OS / editors
+.DS_Store
+.vscode
+.idea
+
+# tests
+test
+coverage
+.nyc_output
