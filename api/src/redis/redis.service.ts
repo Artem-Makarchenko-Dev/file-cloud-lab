@@ -6,10 +6,13 @@ export class RedisService implements OnModuleDestroy {
   private readonly client: Redis;
 
   constructor() {
-    this.client = new Redis({
-      host: process.env.REDIS_HOST,
-      port: Number(process.env.REDIS_PORT),
-    });
+    const redisUrl = process.env.REDIS_URL;
+
+    if (!redisUrl) {
+      throw new Error('REDIS_URL is not set');
+    }
+
+    this.client = new Redis(redisUrl);
   }
 
   async set(key: string, value: string) {
