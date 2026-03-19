@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import bcrypt from 'bcrypt';
+import type { Profile } from 'passport-google-oauth20';
 import { PrismaService } from '../../prisma/prisma.service';
 import { SessionService } from './session/session.service';
 import { JwtService } from '@nestjs/jwt';
@@ -147,5 +148,34 @@ export class AuthService {
         updatedAt: true,
       },
     });
+  }
+
+  async handleGoogleLogin(profile: Profile) {
+    const email = profile.emails?.[0]?.value;
+
+    if (!email) {
+      throw new UnauthorizedException({
+        code: 'EMAIL_NOT_FOUND',
+        message: 'No email found in Google profile',
+      });
+    }
+
+    let user = await this.prisma.user.findUnique({ where: { email } });
+
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: {
+          email,
+          passwordHash: '',
+          roleId: 1,
+        },
+      });
+    }
+
+    return {
+      id: user.id,
+      email: user.email,
+      roleId: user.roleId,
+    };
   }
 }

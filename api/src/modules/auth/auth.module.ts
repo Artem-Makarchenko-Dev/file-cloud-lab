@@ -7,6 +7,7 @@ import { PrismaModule } from '../../prisma/prisma.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionService } from './session/session.service';
 import { SessionAuthGuard } from './guards/session-auth.guard';
 
@@ -25,7 +26,7 @@ import { SessionAuthGuard } from './guards/session-auth.guard';
       }),
     }),
   ],
-  providers: [AuthService, SessionService, JwtStrategy, SessionAuthGuard],
+  providers: [AuthService, SessionService, JwtStrategy, GoogleStrategy, SessionAuthGuard],
   controllers: [AuthController],
   exports: [JwtModule],
 })

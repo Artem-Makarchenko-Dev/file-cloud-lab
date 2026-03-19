@@ -10,6 +10,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import { AuthGuard } from '@nestjs/passport';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
@@ -27,6 +29,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly sessionService: SessionService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   @Public()
@@ -92,5 +95,31 @@ export class AuthController {
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
   async me(@Req() req: Request) {
     return (req as any).user as AuthUser;
+  }
+
+  @Public()
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  googleAuth() {}
+
+  @Public()
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleAuthRedirect(
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const user = req.user as AuthUser;
+
+    const { sid, refreshToken } = await this.sessionService.createSession(user.id);
+    setAuthCookies(res, sid, refreshToken);
+
+    const accessToken = this.jwtService.sign({
+      sub: user.id,
+      roleId: user.roleId,
+    });
+
+    const webAppUrl = this.configService.get<string>('FRONTEND_URL');
+    return res.redirect(`${webAppUrl}/oauth-success?accessToken=${accessToken}`);
   }
 }
