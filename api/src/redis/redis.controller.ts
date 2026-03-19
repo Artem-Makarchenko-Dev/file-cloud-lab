@@ -1,13 +1,15 @@
 import { Controller, Get } from '@nestjs/common';
-import { RedisService } from './redis.service' 
+import { Public } from '../modules/auth/decorators/public.decorator';
+import { RedisService } from './redis.service';
 
 @Controller('redis')
 export class RedisController {
-    constructor(private readonly redis: RedisService) {}
+  constructor(private readonly redis: RedisService) {}
 
-    @Get()
-    async redisTest() {
-        await this.redis.set('hello', 'world');
-        return this.redis.get('hello');
-    }
+  @Public()
+  @Get()
+  async redisTest() {
+    await this.redis.set('hello', 'world');
+    return this.redis.get('hello');
+  }
 }
