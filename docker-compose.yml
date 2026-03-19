@@ -31,6 +31,8 @@ services:
       DB_HOST: postgres
       DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
       REDIS_URL: ${REDIS_URL}
+      MONGO_URI: ${MONGO_URI}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
       FRONTEND_URL: ${FRONTEND_URL}
     depends_on:
       postgres:
