@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { SessionService } from './session/session.service';
+import { SessionAuthGuard } from './guards/session-auth.guard';
 
 @Module({
   imports: [
@@ -24,7 +25,7 @@ import { SessionService } from './session/session.service';
       }),
     }),
   ],
-  providers: [AuthService, SessionService, JwtStrategy],
+  providers: [AuthService, SessionService, JwtStrategy, SessionAuthGuard],
   controllers: [AuthController],
   exports: [JwtModule],
 })
