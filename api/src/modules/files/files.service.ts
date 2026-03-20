@@ -94,6 +94,13 @@ export class FilesService {
     return { url };
   }
 
+  async findByUserId(userId: number) {
+    return this.prisma.file.findMany({
+      where: { uploadedBy: userId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   async softDelete(userId: number, fileId: number) {
     const file = await this.prisma.file.findUnique({ where: { id: fileId } });
 
