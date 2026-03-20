@@ -1,8 +1,7 @@
 import { Controller, Sse, MessageEvent, UseGuards } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Observable, fromEventPattern } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { fromEventPattern } from 'rxjs';
 import { GqlJwtAuthGuard } from '../../auth/guards/gql-jwt-auth.guard';
 
 @UseGuards(GqlJwtAuthGuard)

@@ -1,6 +1,6 @@
 import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -40,10 +40,16 @@ import { AdminGraphQLModule } from './modules/admin/graphql/admin-graphql.module
       delimiter: '.',
       maxListeners: 20,
     }),
-    BullModule.forRoot({
-      connection: {
-        host: process.env.REDIS_HOST!,
-        port: Number.parseInt(process.env.REDIS_PORT!),
+    BullModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        const redisUrl = new URL(config.getOrThrow<string>('REDIS_URL'));
+        return {
+          connection: {
+            host: redisUrl.hostname,
+            port: Number(redisUrl.port || 6379),
+          },
+        };
       },
     }),
     MongoModule,
