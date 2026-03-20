@@ -12,7 +12,9 @@ export class PaymentsService {
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
   ) {
-    this.stripe = new Stripe(this.config.getOrThrow<string>('STRIPE_SECRET_KEY'));
+    this.stripe = new Stripe(
+      this.config.getOrThrow<string>('STRIPE_SECRET_KEY'),
+    );
   }
 
   async createCheckoutSession(userId: number) {
@@ -55,9 +57,15 @@ export class PaymentsService {
   }
 
   async handleWebhook(rawBody: Buffer, signature: string) {
-    const webhookSecret = this.config.getOrThrow<string>('STRIPE_WEBHOOK_SECRET');
+    const webhookSecret = this.config.getOrThrow<string>(
+      'STRIPE_WEBHOOK_SECRET',
+    );
 
-    const event = this.stripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+    const event = this.stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      webhookSecret,
+    );
 
     switch (event.type) {
       case 'checkout.session.completed': {

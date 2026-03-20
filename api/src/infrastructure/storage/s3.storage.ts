@@ -75,8 +75,16 @@ export class S3Storage implements StorageProvider {
         ContentType: result.ContentType,
         ETag: result.ETag,
       };
-    } catch (error: any) {
-      if (error?.$metadata?.httpStatusCode === 404) {
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        '$metadata' in error &&
+        typeof (error as { $metadata?: { httpStatusCode?: number } }).$metadata
+          ?.httpStatusCode === 'number' &&
+        (error as { $metadata: { httpStatusCode: number } }).$metadata
+          .httpStatusCode === 404
+      ) {
         return null;
       }
       throw error;

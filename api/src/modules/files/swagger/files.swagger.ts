@@ -18,16 +18,24 @@ export function SwaggerPresign() {
   return applyDecorators(
     ApiOperation({ summary: 'Generate presigned URL for file upload' }),
     ApiBody({ type: PresignUploadDto }),
-    ApiResponse({ status: 201, description: 'Presigned URL generated successfully' }),
+    ApiResponse({
+      status: 201,
+      description: 'Presigned URL generated successfully',
+    }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
   );
 }
 
 export function SwaggerConfirm() {
   return applyDecorators(
-    ApiOperation({ summary: 'Confirm file upload after S3 upload is complete' }),
+    ApiOperation({
+      summary: 'Confirm file upload after S3 upload is complete',
+    }),
     ApiBody({ type: CompleteUploadDto }),
-    ApiResponse({ status: 201, description: 'Upload confirmed and file saved in DB' }),
+    ApiResponse({
+      status: 201,
+      description: 'Upload confirmed and file saved in DB',
+    }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
   );
 }

@@ -25,7 +25,9 @@ export function SwaggerLogin() {
     ApiResponse({
       status: 200,
       description: 'User successfully logged in',
-      schema: { example: { accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' } },
+      schema: {
+        example: { accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' },
+      },
     }),
     ApiResponse({ status: 401, description: 'Invalid credentials' }),
   );
@@ -76,7 +78,10 @@ export function SwaggerGoogleStart() {
 export function SwaggerGoogleCallback() {
   return applyDecorators(
     ApiOperation({ summary: 'Google OAuth callback handler' }),
-    ApiResponse({ status: 302, description: 'Redirect after successful authentication' }),
+    ApiResponse({
+      status: 302,
+      description: 'Redirect after successful authentication',
+    }),
     ApiResponse({ status: 401, description: 'OAuth failed' }),
   );
 }

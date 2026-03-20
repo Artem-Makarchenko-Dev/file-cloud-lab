@@ -25,7 +25,10 @@ export class SessionAuthGuard implements CanActivate {
       throw new UnauthorizedException('Missing session cookies');
     }
 
-    const session = await this.sessionService.findValidSession(sid, refreshToken);
+    const session = await this.sessionService.findValidSession(
+      sid,
+      refreshToken,
+    );
 
     if (!session) {
       throw new UnauthorizedException('Invalid session ID');
@@ -37,8 +40,8 @@ export class SessionAuthGuard implements CanActivate {
       throw new UnauthorizedException('User not found for session');
     }
 
-    (request as any).user = user;
-    (request as any).userId = user.id;
+    request.user = user;
+    request.userId = user.id;
 
     return true;
   }

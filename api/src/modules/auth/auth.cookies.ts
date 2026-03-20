@@ -26,7 +26,11 @@ export function getRefreshCookieOptions(): CookieOptions {
   };
 }
 
-export function setAuthCookies(res: Response, sid: string, refreshToken: string) {
+export function setAuthCookies(
+  res: Response,
+  sid: string,
+  refreshToken: string,
+) {
   res.cookie('sid', sid, getSidCookieOptions());
   res.cookie('refresh', refreshToken, getRefreshCookieOptions());
 }

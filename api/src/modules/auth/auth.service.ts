@@ -67,7 +67,9 @@ export class AuthService {
       });
     }
 
-    const existingUser = await this.prisma.user.findUnique({ where: { email } });
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+    });
 
     if (existingUser) {
       throw new ConflictException({
@@ -137,17 +139,24 @@ export class AuthService {
   }
 
   async getUserById(id: number) {
-    return this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        email: true,
-        roleId: true,
-        isActive: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        role: {
+          include: {
+            rolePermissions: { include: { permission: true } },
+          },
+        },
       },
     });
+
+    if (!user) return null;
+
+    const permissions = user.role.rolePermissions.map(
+      (rp) => rp.permission.code,
+    );
+
+    return { id: user.id, email: user.email, roleId: user.roleId, permissions };
   }
 
   async handleGoogleLogin(profile: Profile) {

@@ -24,11 +24,11 @@ export class AuditInterceptor implements NestInterceptor {
     }
 
     return next.handle().pipe(
-      tap(async () => {
+      tap(() => {
         const duration = Date.now() - now;
 
-        await this.auditService.log({
-          userId: (request as any)?.user?.id ?? null,
+        void this.auditService.log({
+          userId: request?.user?.id ?? undefined,
           type: 'HTTP_REQUEST',
           route: request?.originalUrl,
           method: request?.method,

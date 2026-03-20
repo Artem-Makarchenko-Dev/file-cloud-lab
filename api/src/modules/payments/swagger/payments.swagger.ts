@@ -12,11 +12,15 @@ export function SwaggerPaymentsController() {
 
 export function SwaggerCreateCheckout() {
   return applyDecorators(
-    ApiOperation({ summary: 'Create Stripe Checkout session for Premium plan' }),
+    ApiOperation({
+      summary: 'Create Stripe Checkout session for Premium plan',
+    }),
     ApiResponse({
       status: 201,
       description: 'Checkout session created successfully',
-      schema: { example: { url: 'https://checkout.stripe.com/c/pay/cs_test_123...' } },
+      schema: {
+        example: { url: 'https://checkout.stripe.com/c/pay/cs_test_123...' },
+      },
     }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
   );

@@ -47,7 +47,11 @@ export class FilesService {
       throw new BadRequestException('Invalid file status');
     }
 
-    let metadata;
+    let metadata: {
+      ContentLength?: number;
+      ContentType?: string;
+      ETag?: string;
+    } | null;
     try {
       metadata = await this.storage.headObject(key);
     } catch {

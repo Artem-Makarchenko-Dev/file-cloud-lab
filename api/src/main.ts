@@ -9,7 +9,10 @@ async function bootstrap() {
   const frontendUrl = process.env.FRONTEND_URL;
 
   app.enableCors({
-    origin: (origin, cb) => {
+    origin: (
+      origin: string | undefined,
+      cb: (err: Error | null, allow?: boolean) => void,
+    ) => {
       if (!origin) return cb(null, true);
       if (frontendUrl && origin === frontendUrl) return cb(null, true);
       return cb(new Error(`CORS blocked for origin: ${origin}`), false);
@@ -23,7 +26,9 @@ async function bootstrap() {
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Nest Docker Test API')
-    .setDescription('SaaS API with JWT Auth, Stripe Subscriptions, File Storage, RBAC')
+    .setDescription(
+      'SaaS API with JWT Auth, Stripe Subscriptions, File Storage, RBAC',
+    )
     .setVersion('1.0.0')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -39,4 +44,4 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 3000);
 }
 
-bootstrap();
+void bootstrap();

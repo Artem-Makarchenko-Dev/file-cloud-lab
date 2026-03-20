@@ -19,8 +19,9 @@ export class StripeWebhookController {
     try {
       await this.paymentsService.handleWebhook(req.rawBody!, signature);
       return res.status(200).send();
-    } catch (err: any) {
-      console.error('Webhook error:', err.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      console.error('Webhook error:', message);
       return res.status(401).send('Webhook Error');
     }
   }

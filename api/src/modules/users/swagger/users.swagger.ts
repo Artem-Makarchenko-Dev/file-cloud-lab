@@ -14,7 +14,10 @@ export function SwaggerUsersController() {
 export function SwaggerFindAllUsers() {
   return applyDecorators(
     ApiOperation({ summary: 'Get all users (admin only)' }),
-    ApiResponse({ status: 200, description: 'List of users returned successfully' }),
+    ApiResponse({
+      status: 200,
+      description: 'List of users returned successfully',
+    }),
     ApiResponse({ status: 401, description: 'Unauthorized' }),
     ApiResponse({ status: 403, description: 'Forbidden (missing permission)' }),
   );

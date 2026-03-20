@@ -21,12 +21,19 @@ import { SessionAuthGuard } from './guards/session-auth.guard';
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>('JWT_ACCESS_SECRET'),
         signOptions: {
-          expiresIn: (config.get('JWT_ACCESS_EXPIRES_IN') ?? '15m') as StringValue,
+          expiresIn: (config.get('JWT_ACCESS_EXPIRES_IN') ??
+            '15m') as StringValue,
         },
       }),
     }),
   ],
-  providers: [AuthService, SessionService, JwtStrategy, GoogleStrategy, SessionAuthGuard],
+  providers: [
+    AuthService,
+    SessionService,
+    JwtStrategy,
+    GoogleStrategy,
+    SessionAuthGuard,
+  ],
   controllers: [AuthController],
   exports: [JwtModule],
 })

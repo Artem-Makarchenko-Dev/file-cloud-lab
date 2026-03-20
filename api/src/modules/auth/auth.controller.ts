@@ -16,7 +16,11 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { SessionService } from './session/session.service';
-import { clearAuthCookies, setAuthCookies, setRefreshCookie } from './auth.cookies';
+import {
+  clearAuthCookies,
+  setAuthCookies,
+  setRefreshCookie,
+} from './auth.cookies';
 import { SessionAuthGuard } from './guards/session-auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -61,7 +65,9 @@ export class AuthController {
   ) {
     const user = await this.authService.login(body);
 
-    const { sid, refreshToken } = await this.sessionService.createSession(user.id);
+    const { sid, refreshToken } = await this.sessionService.createSession(
+      user.id,
+    );
     setAuthCookies(res, sid, refreshToken);
 
     const accessToken = this.jwtService.sign({
@@ -75,11 +81,9 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   @SwaggerLogout()
-  async logout(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const sid = req.cookies?.['sid'];
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const cookies = req.cookies as Record<string, string | undefined>;
+    const sid = cookies['sid'];
     if (sid) {
       await this.sessionService.revokeSession(sid);
     }
@@ -95,8 +99,9 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const sid = req.cookies?.['sid'];
-    const refreshToken = req.cookies?.['refresh'];
+    const cookies = req.cookies as Record<string, string | undefined>;
+    const sid = cookies['sid'];
+    const refreshToken = cookies['refresh'];
 
     const { accessToken, refreshToken: newRefresh } =
       await this.authService.refresh(sid, refreshToken);
@@ -109,8 +114,8 @@ export class AuthController {
   @Get('me')
   @UseGuards(SessionAuthGuard, JwtAuthGuard)
   @SwaggerMe()
-  async me(@Req() req: Request) {
-    return (req as any).user as AuthUser;
+  me(@Req() req: Request) {
+    return req.user as AuthUser;
   }
 
   @Public()
@@ -123,13 +128,12 @@ export class AuthController {
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   @SwaggerGoogleCallback()
-  async googleAuthRedirect(
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     const user = req.user as AuthUser;
 
-    const { sid, refreshToken } = await this.sessionService.createSession(user.id);
+    const { sid, refreshToken } = await this.sessionService.createSession(
+      user.id,
+    );
     setAuthCookies(res, sid, refreshToken);
 
     const accessToken = this.jwtService.sign({
@@ -138,6 +142,8 @@ export class AuthController {
     });
 
     const webAppUrl = this.configService.get<string>('FRONTEND_URL');
-    return res.redirect(`${webAppUrl}/oauth-success?accessToken=${accessToken}`);
+    return res.redirect(
+      `${webAppUrl}/oauth-success?accessToken=${accessToken}`,
+    );
   }
 }

@@ -15,8 +15,10 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+    it('should return connection status', () => {
+      expect(appController.getConnectionStatus()).toEqual({
+        message: 'Yeah! Beackend is connected',
+      });
     });
   });
 });
