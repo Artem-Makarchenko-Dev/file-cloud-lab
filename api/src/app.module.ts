@@ -4,7 +4,9 @@ import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { BullModule } from '@nestjs/bullmq';
 import { EventsModule } from './modules/events/events.module';
+import { JobsModule } from './modules/jobs/jobs.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -36,6 +38,12 @@ import { AdminGraphQLModule } from './modules/admin/graphql/admin-graphql.module
       delimiter: '.',
       maxListeners: 20,
     }),
+    BullModule.forRoot({
+      connection: {
+        host: process.env.REDIS_HOST!,
+        port: Number.parseInt(process.env.REDIS_PORT!),
+      },
+    }),
     MongoModule,
     PrismaModule,
     RedisModule,
@@ -47,6 +55,7 @@ import { AdminGraphQLModule } from './modules/admin/graphql/admin-graphql.module
     PaymentsModule,
     AdminGraphQLModule,
     EventsModule,
+    JobsModule,
   ],
   controllers: [AppController],
   providers: [
