@@ -7,6 +7,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { BullModule } from '@nestjs/bullmq';
 import { EventsModule } from './modules/events/events.module';
 import { JobsModule } from './modules/jobs/jobs.module';
+import { WsModule } from './modules/realtime/ws/ws.module';
+import { SseModule } from './modules/realtime/sse/sse.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
@@ -56,6 +58,8 @@ import { AdminGraphQLModule } from './modules/admin/graphql/admin-graphql.module
     AdminGraphQLModule,
     EventsModule,
     JobsModule,
+    WsModule,
+    SseModule,
   ],
   controllers: [AppController],
   providers: [
