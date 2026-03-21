@@ -28,5 +28,7 @@ yarn lint
 | `/` | Landing |
 | `/login`, `/signup` | Sign in / sign up |
 | `/oauth-success` | After Google OAuth (token in query + cookies from API) |
+| `/users` | User list (requires `users.read` on the API) |
+| `/users/[id]` | User detail (requires `users.read`) |
 
 Auth matches Nest: **HttpOnly cookies** (`sid`, `refresh`) + **access JWT** in Redux and the `Authorization` header.

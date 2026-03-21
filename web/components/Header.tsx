@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { canReadUsers } from '@/lib/permissions';
 import { useAppDispatch, useAppSelector } from '@/lib/store/hooks';
 import { logoutThunk } from '@/lib/store/auth.thunks';
 
@@ -20,6 +21,7 @@ export default function Header() {
   }, []);
 
   const isLoggedIn = Boolean(accessToken && user);
+  const showUsersNav = isLoggedIn && canReadUsers(user);
 
   const onLogout = async () => {
     await dispatch(logoutThunk());
@@ -46,6 +48,14 @@ export default function Header() {
       <div className="flex items-center gap-4">
         {isLoggedIn ? (
           <>
+            {showUsersNav ? (
+              <Link
+                href="/users"
+                className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+              >
+                Users
+              </Link>
+            ) : null}
             <span className="text-sm text-gray-300">{user?.email}</span>
             <button
               type="button"
