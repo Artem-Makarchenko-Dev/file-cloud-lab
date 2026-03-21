@@ -33,24 +33,32 @@ async function main() {
   }
   const skipAdminUser = process.env.SEED_SKIP_ADMIN_USER === 'true';
 
-  const pool = new Pool({ connectionString: url });
+  const pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false } });
   const prisma = new PrismaClient({
     adapter: new PrismaPg(pool),
     log: ['warn', 'error'],
   });
 
   try {
-    const userRole = await prisma.role.upsert({
+    let userRole = await prisma.role.findUnique({
       where: { name: 'user' },
-      update: {},
-      create: { name: 'user', description: 'Default role for signups' },
     });
 
-    const adminRole = await prisma.role.upsert({
+    if (!userRole) {
+      userRole = await prisma.role.create({
+        data: { name: 'user', description: 'Default role for signups' },
+      });
+    }
+
+    let adminRole = await prisma.role.findUnique({
       where: { name: 'admin' },
-      update: {},
-      create: { name: 'admin', description: 'Full access' },
     });
+
+    if (!adminRole) {
+      adminRole = await prisma.role.create({
+        data: { name: 'admin', description: 'Full access' },
+      });
+    }
 
     if (userRole.id !== 1) {
       console.warn(
@@ -78,19 +86,29 @@ async function main() {
 
     if (!skipAdminUser) {
       const passwordHash = await bcrypt.hash(adminPassword, SALT_ROUNDS);
-      await prisma.user.upsert({
+
+      const existingUser = await prisma.user.findUnique({
         where: { email: adminEmail },
-        update: {
-          passwordHash,
-          roleId: adminRole.id,
-          isActive: true,
-        },
-        create: {
-          email: adminEmail,
-          passwordHash,
-          roleId: adminRole.id,
-        },
       });
+
+      if (existingUser) {
+        await prisma.user.update({
+          where: { email: adminEmail },
+          data: {
+            passwordHash,
+            roleId: adminRole.id,
+            isActive: true,
+          },
+        });
+      } else {
+        await prisma.user.create({
+          data: {
+            email: adminEmail,
+            passwordHash,
+            roleId: adminRole.id,
+          },
+        });
+      }
     }
 
     console.log('Seed completed.');
