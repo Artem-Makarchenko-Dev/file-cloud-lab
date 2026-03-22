@@ -1,30 +1,31 @@
 dev:
-	docker compose \
+	docker compose -p file-cloud-lab \
 	-f docker-compose.yml \
 	-f docker-compose.infra.yml \
 	-f docker-compose.dev.yml \
-	up --build
+	up -d
 
 prod:
-	docker compose \
+	docker compose -p file-cloud-lab \
 	-f docker-compose.yml \
 	-f docker-compose.infra.yml \
 	up --build
 
 build:
-	docker compose \
+	docker compose -p file-cloud-lab \
 	-f docker-compose.yml \
 	-f docker-compose.infra.yml \
 	build
 
 down:
-	docker compose \
+	docker compose -p file-cloud-lab \
 	-f docker-compose.yml \
 	-f docker-compose.infra.yml \
+	-f docker-compose.dev.yml \
 	down
 
 logs:
-	docker compose logs -f api
+	docker compose -p file-cloud-lab logs -f api
 
 ps:
-	docker compose ps
+	docker compose -p file-cloud-lab ps

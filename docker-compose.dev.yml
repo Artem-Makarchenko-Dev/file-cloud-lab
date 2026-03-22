@@ -1,14 +1,13 @@
 services:
 
   web:
-    container_name: docker-test-web-dev
     build:
       context: ./web
       target: builder
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     user: root
-    command: sh -c "yarn install && yarn dev -p 8080"
+    command: sh -c "yarn dev -p 8080"
     volumes:
       - ./web:/app
       - web_node_modules:/app/node_modules
@@ -27,7 +26,6 @@ services:
       - backend
 
   api:
-    container_name: docker-test-nest-api-dev
     build:
       context: ./api
       target: builder
