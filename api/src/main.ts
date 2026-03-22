@@ -28,7 +28,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Nest Docker Test API')
+    .setTitle('File Cloud Lab API')
     .setDescription(
       'SaaS API with JWT Auth, Stripe Subscriptions, File Storage, RBAC',
     )

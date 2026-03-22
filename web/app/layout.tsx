@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Nest Docker Test',
+  title: 'File Cloud Lab',
   description: 'Web client for Nest API',
 };
 

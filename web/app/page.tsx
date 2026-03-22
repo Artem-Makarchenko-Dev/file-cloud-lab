@@ -10,7 +10,7 @@ export default function Home() {
 
       <main className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative z-10 px-4 pt-24">
         <h1 className="text-5xl md:text-7xl font-bold text-center bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent drop-shadow-sm">
-          Nest Docker Test
+          File Cloud Lab
         </h1>
         <p className="mt-6 text-lg text-gray-400 max-w-2xl text-center">
           Full-stack demo: JWT auth, files, Stripe, RBAC — wired to the Nest API.

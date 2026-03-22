@@ -1,6 +1,6 @@
 # Web (Next.js)
 
-API client for the repository root (`nest-docker-test`). Dev port: **8080**.
+API client for the repository root (`file-cloud-lab`). Dev port: **8080**.
 
 ## Environment variables
 
