@@ -32,7 +32,7 @@ services:
       context: ./api
       target: builder
     user: root
-    command: sh -c "yarn install && yarn start:dev"
+    command: sh -c "yarn install && yarn prisma:generate && yarn db:migrate && yarn db:seed && yarn start:dev"
     volumes:
       - ./api:/app
       - api_node_modules:/app/node_modules

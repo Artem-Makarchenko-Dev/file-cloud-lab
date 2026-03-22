@@ -16,6 +16,19 @@ const PERMISSION_CODES = [
   { code: 'audit.read', description: 'Read audit logs' },
 ] as const;
 
+function pgSsl():
+  | false
+  | { rejectUnauthorized: boolean } {
+  const flag = process.env.DATABASE_SSL?.toLowerCase();
+  if (flag === 'true') return { rejectUnauthorized: false };
+  if (flag === 'false') return false;
+  const url = process.env.DATABASE_URL ?? '';
+  if (/[?&]sslmode=(require|verify-full|verify-ca)/i.test(url)) {
+    return { rejectUnauthorized: false };
+  }
+  return false;
+}
+
 async function main() {
   const url = process.env.DATABASE_URL;
   if (!url) {
@@ -33,7 +46,7 @@ async function main() {
   }
   const skipAdminUser = process.env.SEED_SKIP_ADMIN_USER === 'true';
 
-  const pool = new Pool({ connectionString: url, ssl: { rejectUnauthorized: false } });
+  const pool = new Pool({ connectionString: url, ssl: pgSsl() });
   const prisma = new PrismaClient({
     adapter: new PrismaPg(pool),
     log: ['warn', 'error'],
