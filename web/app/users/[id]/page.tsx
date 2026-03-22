@@ -4,8 +4,9 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { UserDeleteSection } from '@/components/users/UserDeleteSection';
 import { fetchUserById } from '@/lib/api/users';
-import { canReadUsers } from '@/lib/permissions';
+import { canDeleteUsers, canReadUsers } from '@/lib/permissions';
 import { useAppSelector } from '@/lib/store/hooks';
 import type { AuthUser } from '@/lib/store/auth.types';
 import type { UserDetail } from '@/lib/types/users';
@@ -252,7 +253,18 @@ export default function UserDetailPage() {
         {loading && !detail ? (
           <p className="text-gray-400">Loading…</p>
         ) : null}
-        {detail ? <UserDetailCard detail={detail} /> : null}
+        {detail ? (
+          <>
+            <UserDetailCard detail={detail} />
+            <UserDeleteSection
+              targetUserId={detail.id}
+              targetEmail={detail.email}
+              currentUserId={user?.id ?? 0}
+              canDelete={canDeleteUsers(user)}
+              onDeleted={() => router.push('/users')}
+            />
+          </>
+        ) : null}
       </div>
     </div>
   );

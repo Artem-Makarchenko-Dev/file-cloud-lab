@@ -34,12 +34,16 @@ export default function SignupForm() {
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         setStatus('error');
-        const data = error.response.data as { message?: string };
-        setMessage(
-          data?.message ??
+        const data = error.response.data as {
+          message?: string | string[];
+        };
+        const raw = data?.message;
+        const msg = Array.isArray(raw)
+          ? raw.join(' ')
+          : (raw ??
             error.response.statusText ??
-            'Registration failed. Please try again.',
-        );
+            'Registration failed. Please try again.');
+        setMessage(msg);
       } else {
         setStatus('error');
         setMessage('Something went wrong. Please try again.');
@@ -100,12 +104,16 @@ export default function SignupForm() {
                   type="password"
                   autoComplete="new-password"
                   required
+                  minLength={8}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="block w-full rounded-lg border-0 bg-white/5 p-3 text-white shadow-sm ring-1 ring-inset ring-white/10 placeholder:text-gray-500 focus:ring-2 focus:ring-inset focus:ring-purple-500 sm:text-sm sm:leading-6 transition-all duration-200"
-                  placeholder="••••••"
+                  placeholder="••••••••"
                 />
               </div>
+              <p className="mt-1 text-xs text-gray-500">
+                At least 8 characters (required by the API).
+              </p>
             </div>
           </div>
 

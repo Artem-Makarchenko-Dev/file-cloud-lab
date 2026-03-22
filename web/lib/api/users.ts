@@ -21,3 +21,7 @@ export async function fetchUserById(id: number): Promise<UserDetail> {
   const { data } = await api.get<UserDetail>(`/users/${id}`);
   return data;
 }
+
+export async function deleteUserById(id: number): Promise<void> {
+  await api.delete(`/users/${id}`);
+}
