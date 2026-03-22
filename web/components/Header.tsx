@@ -56,6 +56,12 @@ export default function Header() {
                 Users
               </Link>
             ) : null}
+            <Link
+              href="/files"
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors"
+            >
+              Files
+            </Link>
             <span className="text-sm text-gray-300">{user?.email}</span>
             <button
               type="button"

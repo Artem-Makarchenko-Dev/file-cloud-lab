@@ -30,5 +30,6 @@ yarn lint
 | `/oauth-success` | After Google OAuth (token in query + cookies from API) |
 | `/users` | User list (requires `users.read` on the API) |
 | `/users/[id]` | User detail (`users.read`); delete action if `users.delete` (not your own user) |
+| `/files` | Upload: `POST /files/presign` → PUT to presigned URL → `POST /files/confirm` (auth required) |
 
 Auth matches Nest: **HttpOnly cookies** (`sid`, `refresh`) + **access JWT** in Redux and the `Authorization` header.
