@@ -65,9 +65,11 @@ export const authSlice = createSlice({
 
       .addCase(meThunk.fulfilled, (s, a) => {
         s.user = a.payload;
+        s.isAuthReady = true;
       })
       .addCase(meThunk.rejected, (s) => {
         s.user = null;
+        s.isAuthReady = true;
       })
 
       .addCase(logoutThunk.fulfilled, (s) => {
