@@ -1,0 +1,270 @@
+{
+  "info": {
+    "name": "File Cloud Lab API (Production Ready)",
+    "_postman_id": "file-cloud-lab",
+    "description": "Demo-ready API collection that simulates real client behavior for a production-like backend. Includes authentication flows, file upload pipeline (presign → upload → confirm), automated token handling, and both positive and negative test scenarios. Designed to showcase how the system works end-to-end, not just individual endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+
+  "variable": [
+    { "key": "baseUrl", "value": "https://nest-docker-test-5t7h.onrender.com" },
+    { "key": "accessToken", "value": "" },
+    { "key": "userId", "value": "" },
+    { "key": "fileId", "value": "" },
+    { "key": "presignedUrl", "value": "" }
+  ],
+
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "const token = pm.collectionVariables.get('accessToken');",
+          "if (token) {",
+          "  pm.request.headers.upsert({ key: 'Authorization', value: `Bearer ${token}` });",
+          "}",
+          "",
+          "// Auto refresh token if missing",
+          "if (!token && pm.request.url.toString().includes('/auth') === false) {",
+          "  pm.sendRequest({",
+          "    url: pm.collectionVariables.get('baseUrl') + '/auth/refresh',",
+          "    method: 'POST'",
+          "  }, (err, res) => {",
+          "    if (!err && res.code === 200) {",
+          "      const json = res.json();",
+          "      pm.collectionVariables.set('accessToken', json.accessToken);",
+          "    }",
+          "  });",
+          "}"
+        ]
+      }
+    }
+  ],
+
+  "item": [
+    {
+      "name": "Workflow (E2E)",
+      "description": "Full happy path: Signup → Login → Me → Files",
+      "item": [
+        {
+          "name": "Signup",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"test@test.com\", \"password\": \"password123\" }"
+            },
+            "url": "{{baseUrl}}/auth/signup"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('201 Created', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"test@test.com\", \"password\": \"password123\" }"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('accessToken', json.accessToken);",
+                  "pm.collectionVariables.set('userId', json.user?.id);",
+                  "pm.test('has accessToken', () => pm.expect(json.accessToken).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Negative Tests",
+      "item": [
+        {
+          "name": "Login Wrong Password",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"email\": \"test@test.com\", \"password\": \"wrong\" }"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Me Without Token",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/auth/me"
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": { "exec": ["pm.collectionVariables.unset('accessToken');"] }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('401 Unauthorized', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Files (Full Flow)",
+      "description": "Presign → Upload → Confirm → Download",
+      "item": [
+        {
+          "name": "Presign Upload",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"filename\": \"test.png\", \"contentType\": \"image/png\" }"
+            },
+            "url": "{{baseUrl}}/files/presign"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('presignedUrl', json.url);",
+                  "pm.collectionVariables.set('fileId', json.fileId);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Upload File (Binary)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "BINARY_DATA"
+            },
+            "url": "{{presignedUrl}}"
+          }
+        },
+        {
+          "name": "Confirm Upload",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"key\": \"your-key\" }"
+            },
+            "url": "{{baseUrl}}/files/confirm"
+          }
+        },
+        {
+          "name": "Get Files",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/files"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('array response', () => {",
+                  "  pm.expect(pm.response.json()).to.be.an('array');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Liveness",
+          "request": { "method": "GET", "url": "{{baseUrl}}/health/live" },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));",
+                  "pm.test('fast response', () => pm.expect(pm.response.responseTime).to.be.below(500));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "name": "Internal (Disabled in Production)",
+      "description": "Internal endpoints - should be disabled in production",
+      "item": [
+        { "name": "Prisma", "request": { "method": "GET", "url": "{{baseUrl}}/prisma" } },
+        { "name": "Redis", "request": { "method": "GET", "url": "{{baseUrl}}/redis" } }
+      ]
+    }
+  ]
+}

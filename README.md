@@ -198,15 +198,49 @@ The system consists of several core subsystems:
 
 ## API
 
-### Swagger
+### Swagger (OpenAPI)
 
 [Open Swagger Docs](https://nest-docker-test-5t7h.onrender.com/docs)
+
+Interactive API reference with full OpenAPI 3.0 schema.
+
+- Browse endpoints by domain (Auth, Users, Files, Payments)
+- Inspect request/response DTOs
+- Execute requests directly from the browser
+- Test auth (Bearer JWT) and see 401/403 cases
+- Supports pagination, sorting, and filters
+
+Notes:
+- `/prisma`, `/redis` are internal (dev only)
+- SSE (`/admin/events`) and WebSocket are not supported in Swagger UI
+- GraphQL is available at `/graphql`
+
+Swagger is for reference; use Postman for end-to-end flows.
 
 ### Postman Collection
 
 [Open Postman Workspace](https://www.postman.com/artem3-2305/workspace/file-cloud-lab-api)
 
-Includes pre-configured requests for authentication, file upload flow, and core API endpoints.
+The collection is designed as a **demo-ready client simulation**, not just a list of endpoints.
+
+It works out of the box without additional setup.
+
+#### Quick demo flow
+
+1. Run **Signup**
+2. Run **Login** — accessToken is stored automatically
+3. Run **Me** — Authorization header is attached automatically
+
+#### What’s included
+
+- Pre-configured authentication flow
+- Automatic token handling (stored in collection variables)
+- Full file upload pipeline:
+  - presign → upload → confirm
+- Negative test scenarios (invalid credentials, unauthorized access)
+- Core API endpoints grouped by domain
+
+This setup demonstrates **real client behavior and end-to-end API usage**, not just individual requests.
 
 ---
 
