@@ -88,7 +88,7 @@ describe('UsersService', () => {
     it('should apply isActive filter', async () => {
       prisma.$transaction.mockResolvedValue([[], 0] as never);
 
-      await service.findAll({ page: 1, limit: 10, isActive: 'true' } as never);
+      await service.findAll({ page: 1, limit: 10, isActive: true } as never);
 
       const findManyArgs = prisma.user.findMany.mock.calls[0][0]!;
       expect(findManyArgs.where).toEqual({ isActive: true });

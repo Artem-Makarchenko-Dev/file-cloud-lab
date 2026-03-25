@@ -120,7 +120,7 @@ import { HealthModule } from './modules/health/health.module';
     },
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({ whitelist: true }),
+      useValue: new ValidationPipe({ whitelist: true, transform: true }),
     },
     {
       provide: APP_INTERCEPTOR,

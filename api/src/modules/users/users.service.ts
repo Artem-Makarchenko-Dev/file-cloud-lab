@@ -25,7 +25,7 @@ export class UsersService {
 
     const where = {
       ...(roleId !== undefined && { roleId: Number(roleId) }),
-      ...(isActive !== undefined && { isActive: isActive === 'true' }),
+      ...(isActive !== undefined && { isActive }),
     };
 
     const [data, total] = await this.prisma.$transaction([
