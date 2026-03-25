@@ -200,11 +200,11 @@ The system consists of several core subsystems:
 
 ### Swagger
 
-https://nest-docker-test-5t7h.onrender.com/docs
+[Open Swagger Docs](https://nest-docker-test-5t7h.onrender.com/docs)
 
 ### Postman Collection
 
-https://www.postman.com/artem3-2305/workspace/file-cloud-lab-api
+[Open Postman Workspace](https://www.postman.com/artem3-2305/workspace/file-cloud-lab-api)
 
 Includes pre-configured requests for authentication, file upload flow, and core API endpoints.
 
@@ -298,7 +298,7 @@ Health:
 ## Design
 
 Figma (view-only):
-https://www.figma.com/design/0hUbG6oFLoB2inmTHxfQNv/File-Cloud-Lab
+[Open Figma Design](https://www.figma.com/design/0hUbG6oFLoB2inmTHxfQNv/File-Cloud-Lab)
 
 The design covers both user and admin flows, including authentication, file management, RBAC, billing, and system monitoring.
 
