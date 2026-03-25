@@ -4,17 +4,13 @@ Backend-driven SaaS platform for file storage and management, built using an API
 
 ## Quick Access
 
-- API (Swagger):
-  https://nest-docker-test-5t7h.onrender.com/docs
+- API (Swagger): [Open Swagger Docs](https://nest-docker-test-5t7h.onrender.com/docs)
 
-- Postman Collection:
-  https://www.postman.com/artem3-2305/workspace/file-cloud-lab-api
+- Postman Collection: [Open Postman Workspace](https://www.postman.com/artem3-2305/workspace/file-cloud-lab-api)
 
-- Design (Figma):
-  https://www.figma.com/design/0hUbG6oFLoB2inmTHxfQNv/File-Cloud-Lab
+- Design (Figma): [Open Figma Design](https://www.figma.com/design/0hUbG6oFLoB2inmTHxfQNv/File-Cloud-Lab)
 
-- Live Demo (Frontend):
-  https://full-stack-web-hni7.onrender.com/  
+- Live Demo (Frontend): [Open Live App](https://full-stack-web-hni7.onrender.com/)  
   _(frontend is in progress, intentionally minimal and focused on demonstrating backend integration and core flows: initial page and authentication)_
 
 ## TL;DR
