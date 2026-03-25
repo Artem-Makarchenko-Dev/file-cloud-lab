@@ -89,7 +89,6 @@ export function ApiErrServiceUnavailable(
   });
 }
 
-/** Typical stack for JWT + RBAC list/read endpoints */
 export function ApiErrorsAuthenticatedList() {
   return applyDecorators(
     ApiErrUnauthorized(),
@@ -97,7 +96,6 @@ export function ApiErrorsAuthenticatedList() {
   );
 }
 
-/** JWT + RBAC + optional 404 */
 export function ApiErrorsAuthenticatedRead() {
   return applyDecorators(
     ApiErrUnauthorized(),
@@ -106,7 +104,6 @@ export function ApiErrorsAuthenticatedRead() {
   );
 }
 
-/** JWT-protected mutation that may 404 */
 export function ApiErrorsAuthenticatedWrite() {
   return applyDecorators(
     ApiErrUnauthorized(),

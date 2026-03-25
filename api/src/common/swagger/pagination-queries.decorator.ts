@@ -1,7 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 
-/** Query params documented for `GET /users` (only user-relevant filters). */
 export function ApiUsersPaginationQueries() {
   return applyDecorators(
     ApiQuery({
@@ -33,7 +32,6 @@ export function ApiUsersPaginationQueries() {
   );
 }
 
-/** Query params documented for `GET /files` (only file-relevant filters). */
 export function ApiFilesPaginationQueries() {
   return applyDecorators(
     ApiQuery({

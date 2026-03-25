@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-/** Shape returned by the global HTTP exception filter for errors. */
 export class HttpErrorResponseDto {
   @ApiProperty({ example: 401, description: 'HTTP status code' })
   statusCode: number;

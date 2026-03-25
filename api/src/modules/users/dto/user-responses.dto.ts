@@ -68,7 +68,6 @@ export class UserDetailResponseDto {
   role: UserDetailRoleDto;
 }
 
-/** Public fields for a deleted user (password hash omitted from API docs). */
 export class UserDeletedResponseDto {
   @ApiProperty({ example: 1 })
   id: number;

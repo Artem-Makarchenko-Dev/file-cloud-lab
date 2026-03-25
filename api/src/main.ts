@@ -1,8 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { GlobalHttpExceptionFilter } from './common/filters/global-http-exception.filter';
+import { patchOpenApiDocument } from './common/swagger/openapi-document.patch';
+import {
+  swaggerConfig,
+  swaggerOperationId,
+} from './common/swagger/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { rawBody: true });
@@ -27,19 +32,11 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('File Cloud Lab API')
-    .setDescription(
-      'SaaS API with JWT Auth, Stripe Subscriptions, File Storage, RBAC',
-    )
-    .setVersion('1.0.0')
-    .addBearerAuth(
-      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
-      'access-token',
-    )
-    .build();
+  const document = SwaggerModule.createDocument(app, swaggerConfig, {
+    operationIdFactory: swaggerOperationId,
+  });
+  patchOpenApiDocument(document);
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: { persistAuthorization: true },
   });

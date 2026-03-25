@@ -1,6 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-/** Subset of `User` for internal listing docs (`GET /prisma`). */
 export class InternalUserRecordDto {
   @ApiProperty({ example: 1 })
   id: number;
