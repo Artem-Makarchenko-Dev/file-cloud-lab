@@ -24,6 +24,18 @@ down:
 	-f docker-compose.dev.yml \
 	down
 
+prod-aws:
+	docker compose -p file-cloud-lab \
+	-f docker-compose.yml \
+	-f docker-compose.prod.yml \
+	up --build -d
+
+down-aws:
+	docker compose -p file-cloud-lab \
+	-f docker-compose.yml \
+	-f docker-compose.prod.yml \
+	down
+
 logs:
 	docker compose -p file-cloud-lab logs -f api
 
