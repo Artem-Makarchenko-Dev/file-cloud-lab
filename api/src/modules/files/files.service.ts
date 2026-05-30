@@ -10,6 +10,7 @@ import type { StorageProvider } from '../../infrastructure/storage/storage.provi
 import { STORAGE } from '../../infrastructure/storage/storage.module';
 import { PaginationDto } from '../../common/dto/pagination.dto';
 import { PaginationResponse } from '../../common/types/pagination-response';
+import { FileProcessingService } from '../jobs/file-processing/file-processing.service';
 
 @Injectable()
 export class FilesService {
@@ -17,6 +18,7 @@ export class FilesService {
     @Inject(STORAGE)
     private readonly storage: StorageProvider,
     private readonly prisma: PrismaService,
+    private readonly fileProcessingService: FileProcessingService,
   ) {}
 
   async presignUpload(userId: number, filename: string, contentType: string) {
@@ -60,13 +62,20 @@ export class FilesService {
       throw new BadRequestException('File not uploaded to storage');
     }
 
-    return this.prisma.file.update({
+    const updatedFile = await this.prisma.file.update({
       where: { key },
       data: {
         status: FileStatus.UPLOADED,
         size: metadata?.ContentLength,
       },
     });
+
+    await this.fileProcessingService.addProcessingJob({
+      fileId: updatedFile.id!,
+      userId,
+    });
+
+    return updatedFile;
   }
 
   async findAll(
