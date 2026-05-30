@@ -18,9 +18,10 @@ export class S3Storage implements StorageProvider {
     endpoint?: string;
     accessKeyId: string;
     secretAccessKey: string;
+    cloudfrontDomain?: string;
   }) {
     this.bucket = config.bucket;
-
+    this.cloudfrontDomain = config.cloudfrontDomain;
     this.client = new S3Client({
       region: config.region,
       endpoint: config.endpoint,
@@ -31,6 +32,8 @@ export class S3Storage implements StorageProvider {
       },
     });
   }
+
+  private readonly cloudfrontDomain?: string;
 
   async generateUploadUrl({
     key,
@@ -92,6 +95,10 @@ export class S3Storage implements StorageProvider {
   }
 
   async generateDownloadUrl({ key }: { key: string }): Promise<string> {
+    if (this.cloudfrontDomain) {
+      return `https://${this.cloudfrontDomain}/${key}`;
+    }
+
     const command = new GetObjectCommand({
       Bucket: this.bucket,
       Key: key,

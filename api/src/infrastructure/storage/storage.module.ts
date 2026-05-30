@@ -16,6 +16,7 @@ export const STORAGE = 'STORAGE_PROVIDER';
           endpoint: config.get<string>('S3_ENDPOINT'),
           accessKeyId: config.getOrThrow<string>('S3_ACCESS_KEY'),
           secretAccessKey: config.getOrThrow<string>('S3_SECRET_KEY'),
+          cloudfrontDomain: config.get<string>('CLOUDFRONT_DOMAIN'),
         });
       },
     },
