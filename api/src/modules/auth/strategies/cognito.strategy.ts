@@ -15,20 +15,21 @@ type CognitoJwtPayload = {
 export class CognitoStrategy extends PassportStrategy(Strategy, 'cognito') {
   constructor(config: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKeyProvider: passportJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksRequestsPerMinute: 5,
-        jwksUri: `${config.getOrThrow('COGNITO_ISSUER')}/.well-known/jwks.json`,
-      }),
-      issuer: config.getOrThrow('COGNITO_ISSUER'),
-      algorithms: ['RS256'],
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ignoreExpiration: false,
+        secretOrKeyProvider: passportJwtSecret({
+          cache: true,
+          rateLimit: true,
+          jwksRequestsPerMinute: 5,
+          jwksUri: `${config.getOrThrow('COGNITO_ISSUER')}/.well-known/jwks.json`,
+        }),
+        issuer: config.getOrThrow('COGNITO_ISSUER'),
+        algorithms: ['RS256'],
     });
   }
 
   async validate(payload: CognitoJwtPayload) {
+    console.log('Cognito payload:', JSON.stringify(payload));
     if (payload.token_use !== 'access') {
       throw new UnauthorizedException('Invalid token type');
     }
