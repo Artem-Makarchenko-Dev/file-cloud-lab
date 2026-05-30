@@ -10,6 +10,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionService } from './session/session.service';
 import { SessionAuthGuard } from './guards/session-auth.guard';
+import { CognitoStrategy } from './strategies/cognito.strategy';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SessionAuthGuard } from './guards/session-auth.guard';
     JwtStrategy,
     GoogleStrategy,
     SessionAuthGuard,
+    CognitoStrategy,
   ],
   controllers: [AuthController],
   exports: [JwtModule],

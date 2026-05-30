@@ -36,6 +36,7 @@ import {
   SwaggerGoogleStart,
   SwaggerGoogleCallback,
 } from './swagger/auth.swagger';
+import { CognitoAuthGuard } from './guards/cognito-auth.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -120,6 +121,12 @@ export class AuthController {
   @SwaggerMe()
   me(@Req() req: Request) {
     return req.user as AuthUser;
+  }
+
+  @Get('cognito/me')
+  @UseGuards(CognitoAuthGuard)
+  meCognito(@Req() req: Request) {
+    return req.user;
   }
 
   @Public()
