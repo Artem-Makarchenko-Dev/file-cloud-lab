@@ -53,3 +53,9 @@ pids
 
 # Prisma
 /generated/prisma
+
+#Claude
+.claude
+
+# Lambdas
+lambdas/**/*.zip
