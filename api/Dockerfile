@@ -8,6 +8,8 @@ RUN yarn install --frozen-lockfile
 
 COPY . .
 
+ENV NODE_OPTIONS="--max-old-space-size=1536"
+
 RUN yarn prisma:generate
 RUN yarn build
 
