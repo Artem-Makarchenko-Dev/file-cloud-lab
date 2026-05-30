@@ -1,23 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
+import { SqsService } from 'src/infrastructure/sqs/sqs.service';
 
 @Injectable()
 export class FileProcessingService {
   constructor(
-    @InjectQueue('file-processing')
-    private readonly queue: Queue,
+    private readonly sqsService: SqsService
   ) {}
 
   async addProcessingJob(data: { fileId: number; userId: number }) {
-    await this.queue.add('process-file', data, {
-      attempts: 3,
-      backoff: {
-        type: 'exponential',
-        delay: 2000,
-      },
-      removeOnComplete: true,
-      removeOnFail: false,
-    });
+    await this.sqsService.sendMessage(data);
   }
 }

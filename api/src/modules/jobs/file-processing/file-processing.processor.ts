@@ -1,19 +1,16 @@
-import { Processor, WorkerHost } from '@nestjs/bullmq';
-import { Job } from 'bullmq';
 import { Injectable, Logger } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { DomainEventsService } from '../../events/domain-events.service';
 
-@Processor('file-processing')
 @Injectable()
-export class FileProcessingProcessor extends WorkerHost {
+export class FileProcessingProcessor {
   private readonly logger = new Logger(FileProcessingProcessor.name);
 
-  constructor(private readonly events: DomainEventsService) {
-    super();
-  }
+  constructor(private readonly events: DomainEventsService) {}
 
-  async process(job: Job<{ fileId: number; userId: number }>): Promise<void> {
-    const { fileId, userId } = job.data;
+  @OnEvent('file.received')
+  async process(data: { fileId: number; userId: number }): Promise<void> {
+    const { fileId, userId } = data;
 
     this.logger.log(`Start processing file ${fileId}`);
 

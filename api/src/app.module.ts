@@ -8,11 +8,10 @@ import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CorrelationIdMiddleware } from './common/middleware/correlation-id.middleware';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
-import { BullModule } from '@nestjs/bullmq';
 import { EventsModule } from './modules/events/events.module';
 import { JobsModule } from './modules/jobs/jobs.module';
 import { WsModule } from './modules/realtime/ws/ws.module';
@@ -82,18 +81,6 @@ import { HealthModule } from './modules/health/health.module';
       wildcard: true,
       delimiter: '.',
       maxListeners: 20,
-    }),
-    BullModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => {
-        const redisUrl = new URL(config.getOrThrow<string>('REDIS_URL'));
-        return {
-          connection: {
-            host: redisUrl.hostname,
-            port: Number(redisUrl.port || 6379),
-          },
-        };
-      },
     }),
     MongoModule,
     PrismaModule,
