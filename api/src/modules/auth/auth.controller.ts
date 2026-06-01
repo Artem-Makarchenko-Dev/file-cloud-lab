@@ -115,7 +115,6 @@ export class AuthController {
     return { accessToken };
   }
 
-  /** Bearer JWT only — session cookies are not reliably sent on cross-origin XHR (e.g. Next :8080 → API :3000). */
   @Get('me')
   @UseGuards(JwtAuthGuard)
   @SwaggerMe()
@@ -123,6 +122,7 @@ export class AuthController {
     return req.user as AuthUser;
   }
 
+  @Public()
   @Get('cognito/me')
   @UseGuards(CognitoAuthGuard)
   meCognito(@Req() req: Request) {
