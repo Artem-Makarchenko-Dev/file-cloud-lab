@@ -18,12 +18,11 @@ export class CognitoStrategy extends PassportStrategy(Strategy, 'cognito') {
         jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         ignoreExpiration: false,
         secretOrKeyProvider: passportJwtSecret({
-          cache: true,
-          rateLimit: true,
-          jwksRequestsPerMinute: 5,
-          jwksUri: `${config.getOrThrow('COGNITO_ISSUER')}/.well-known/jwks.json`,
+            cache: true,
+            rateLimit: true,
+            jwksRequestsPerMinute: 5,
+            jwksUri: `${config.getOrThrow('COGNITO_ISSUER')}/.well-known/jwks.json`,
         }),
-        issuer: config.getOrThrow('COGNITO_ISSUER'),
         algorithms: ['RS256'],
     });
   }
